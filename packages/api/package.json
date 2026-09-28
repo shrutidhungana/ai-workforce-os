@@ -25,10 +25,12 @@
   "dependencies": {
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
+    "@repo/router": "workspace:*",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
     "superjson": "catalog:",
+    "trpc-to-openapi": "catalog:",
     "url-join": "catalog:",
     "zod": "catalog:"
   },

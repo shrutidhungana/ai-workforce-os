@@ -18,6 +18,7 @@ const wildcardPath = {
   ALL: "*",
   BETTER_AUTH: "/api/auth/*",
   TRPC: "/api/trpc/*",
+  REST: "/api/rest/*",
 } as const;
 
 const db = createDb({ databaseUrl: env.DATABASE_URL });
@@ -63,6 +64,14 @@ app.use(
   })
 );
 
+app.use(
+  wildcardPath.REST,
+  cors({
+    origin: trustedOrigins,
+    credentials: true,
+  })
+);
+
 app.on(["POST", "GET"], wildcardPath.BETTER_AUTH, (c) =>
   auth.handler(c.req.raw)
 );
@@ -74,6 +83,32 @@ app.use(
     router: api.trpcRouter,
     createContext: (c) => api.createTRPCContext({ headers: c.req.headers }),
   })
+);
+
+app.all(wildcardPath.REST, (c) => api.handleRestRequest(c.req.raw));
+
+app.get("/api/openapi.json", (c) => c.json(api.openApiDocument));
+
+app.get("/api/docs", (c) =>
+  c.html(`<!doctype html>
+<html>
+  <head>
+    <title>API Docs</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script>
+      window.onload = () => {
+        window.SwaggerUIBundle({
+          url: "/api/openapi.json",
+          dom_id: "#swagger-ui",
+        });
+      };
+    </script>
+  </body>
+</html>`)
 );
 
 app.get("/", (c) => {
