@@ -1,0 +1,37 @@
+{
+  "name": "@repo/auth",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsc",
+    "build": "tsc --build",
+    "lint": "ultracite lint",
+    "format": "ultracite format",
+    "format:unsafe": "ultracite format --unsafe",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf node_modules dist .turbo .cache",
+    "auth:schema:generate": "bunx @better-auth/cli generate --config ./src/cli-config.ts --output ../db/src/schema/auth.ts"
+  },
+  "dependencies": {
+    "@repo/db": "workspace:*",
+    "better-auth": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3",
+    "@better-auth/cli": "catalog:",
+    "typescript": "catalog:"
+  },
+  "exports": {
+    "./server": {
+      "types": "./src/server.ts",
+      "default": "./src/server.ts"
+    },
+    "./client": {
+      "types": "./src/client.ts",
+      "default": "./src/client.ts"
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
+    },
+    "store#build": {
+      "outputs": [".output/**"],
+      "env": ["PUBLIC_*", "VITE_*"]
+    },
+    "admin#build": {
+      "outputs": [".output/**"],
+      "env": ["PUBLIC_*", "VITE_*"]
+    },
+    "server#build": {
+      "outputs": [],
+      "env": ["DATABASE_URL", "SERVER_*", "PUBLIC_URL_STORE", "PUBLIC_URL_ADMIN", "AUTH_COOKIE_DOMAIN"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"]
+    },
+    "format": {
+      "dependsOn": ["^format"]
+    },
+    "format:unsafe": {
+      "dependsOn": ["^format:unsafe"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "server#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": ["DATABASE_URL", "SERVER_*", "PUBLIC_URL_STORE", "PUBLIC_URL_ADMIN", "AUTH_COOKIE_DOMAIN"]
+    },
+    "store#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": ["PUBLIC_*", "VITE_*"]
+    },
+    "admin#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": ["PUBLIC_*", "VITE_*"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "docker:build": {
+      "dependsOn": ["build"],
+      "inputs": ["Dockerfile", "$TURBO_DEFAULT$"],
+      "cache": false
+    },
+    "server#docker:build": {
+      "dependsOn": ["server#build"],
+      "inputs": ["apps/server/Dockerfile", "$TURBO_DEFAULT$"],
+      "cache": false
+    },
+    "store#docker:build": {
+      "dependsOn": ["store#build"],
+      "inputs": ["apps/store/Dockerfile", "$TURBO_DEFAULT$"],
+      "cache": false
+    },
+    "admin#docker:build": {
+      "dependsOn": ["admin#build"],
+      "inputs": ["apps/admin/Dockerfile", "$TURBO_DEFAULT$"],
+      "cache": false
+    },
+    "db:push": {
+      "cache": false,
+      "env": ["DATABASE_URL"]
+    },
+    "db:studio": {
+      "cache": false,
+      "persistent": true,
+      "env": ["DATABASE_URL"]
+    },
+    "db:generate": {
+      "cache": false,
+      "env": ["DATABASE_URL"]
+    },
+    "db:migrate": {
+      "cache": false,
+      "env": ["DATABASE_URL"]
+    }
+  }
+}

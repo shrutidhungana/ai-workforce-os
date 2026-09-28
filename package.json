@@ -1,0 +1,44 @@
+{
+  "name": "ai-workforce-os",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "dotenv -- turbo run build",
+    "dev": "dotenv -- turbo run dev",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "format:unsafe": "turbo run format:unsafe",
+    "check-types": "turbo run check-types",
+    "clean": "turbo run clean",
+    "db:push": "turbo run db:push",
+    "db:migrate": "turbo run db:migrate",
+    "db:generate": "turbo run db:generate",
+    "db:studio": "turbo run db:studio",
+    "docker:build": "turbo run docker:build",
+    "docker:build:server": "docker build -t ai-workforce-os-server -f apps/server/Dockerfile .",
+    "docker:build:store": "docker build -t ai-workforce-os-store -f apps/store/Dockerfile .",
+    "docker:build:admin": "docker build -t ai-workforce-os-admin -f apps/admin/Dockerfile .",
+    "docker:run:server": "docker run -p 3005:3005 ai-workforce-os-server",
+    "docker:run:store": "docker run -p 3000:3000 ai-workforce-os-store",
+    "docker:run:admin": "docker run -p 3001:3001 ai-workforce-os-admin"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.0",
+    "dotenv-cli": "catalog:",
+    "husky": "^9.1.7",
+    "lefthook": "^1.12.3",
+    "lint-staged": "^16.1.5",
+    "turbo": "^2.5.6",
+    "typescript": "catalog:",
+    "ultracite": "5.1.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.15.0",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc,css,scss,md,mdx}": [
+      "pnpm exec ultracite format"
+    ]
+  }
+}
