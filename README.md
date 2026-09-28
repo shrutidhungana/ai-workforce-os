@@ -191,6 +191,34 @@ ai-workforce-os/
 └── CLAUDE.md         # AI assistant instructions
 ```
 
+## Architecture Notes
+
+### REST/OpenAPI generated from tRPC procedures, not hand-written
+
+The API layer (`packages/router`, `packages/api`, `packages/validators`) exposes every
+endpoint over two transports: the native tRPC transport (`/api/trpc/*`, used by the
+`store`/`admin` apps) and a REST/OpenAPI surface (`/api/rest/*`, `/api/openapi.json`,
+`/api/docs`) generated from the *same* procedures via
+[`trpc-to-openapi`](https://github.com/mcampa/trpc-to-openapi). A procedure opts into
+REST by adding `.meta({ openapi: { method, path } })` plus `.output(...)`; no separate
+REST controller is written.
+
+**Alternative considered:** hand-roll REST routes directly on the Hono app (or via a
+separate router package) that call into the same service/business logic as the tRPC
+procedures.
+
+**Trade-off:** generating REST from tRPC means input validation (Zod), authorization
+(`protectedProcedure`), and error mapping (`TRPCError` code → HTTP status) are defined
+exactly once and can't drift between the two transports — a fix to an authorization
+check or a validation rule is automatically reflected in both. The cost is less control
+over REST-idiomatic shapes: OpenAPI-exposed procedures need required path-param fields
+(e.g. `apiTodoUpdate.id`) and explicit `.output()` schemas that a tRPC-only procedure
+wouldn't need, and error responses carry tRPC's `TRPCError` envelope (`{ message, code,
+data }`) rather than a REST-native error shape. For an internal API where the tRPC
+clients are the primary consumers and REST exists mainly for external tooling and
+`curl`-ability, keeping a single source of truth outweighs owning a fully bespoke REST
+error/response format.
+
 ## 🚢 Deployment
 
 ### Development

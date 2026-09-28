@@ -88,6 +88,10 @@
     "db:migrate": {
       "cache": false,
       "env": ["DATABASE_URL"]
+    },
+    "test": {
+      "cache": false,
+      "env": ["DATABASE_URL"]
     }
   }
 }
